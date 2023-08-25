@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('asns', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('username')->unique();
-            $table->timestamp('validity_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->string('api_token',60)->nullable()->index();
+            $table->string('asn_number')->unique();
+            $table->string('status',32)->index();
+            $table->string('remarks')->nullable();
+            $table->timestamp('inbound_at')->nullable();
+            $table->timestamp('confirmed_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('asns');
     }
 };

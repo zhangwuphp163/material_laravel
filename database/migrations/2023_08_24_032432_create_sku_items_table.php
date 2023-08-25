@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('sku_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('username')->unique();
-            $table->timestamp('validity_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->string('api_token',60)->nullable()->index();
+            $table->unsignedInteger('sku_id')->index();
+            $table->unsignedInteger('material_id')->index();
+            $table->integer('qty')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('sku_items');
     }
 };

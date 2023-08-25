@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('materials', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('username')->unique();
-            $table->timestamp('validity_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->string('api_token',60)->nullable()->index();
+            $table->string('barcode',64)->unique();
+            $table->string('name',128);
+            $table->string('description')->nullable();
+            $table->decimal('unit_price',10,2)->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('materials');
     }
 };

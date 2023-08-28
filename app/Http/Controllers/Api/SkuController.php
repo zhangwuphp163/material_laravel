@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Material;
 use App\Models\Sku;
+use App\Models\SkuItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SkuController extends Controller
 {
@@ -26,25 +28,30 @@ class SkuController extends Controller
     }
 
     public function create(Request $request){
-        $params = $request->all();
-        $createData = $request->only(['barcode','name','description']);
         try{
-            if(!empty($params['id'])){
-                $sku = Sku::whereId($params['id'])->first();
-                if (empty($sku)) throw new \Exception("找不到商品");
-                $exists = Sku::whereBarcode($params['barcode'])->where('id','<>',$params['id'])->exists();
-                if($exists) throw new \Exception("条码【{$params['barcode']}】已经被使用");
-                $sku->update($createData);
-            }else{
-                $sku = Sku::whereBarcode($params['barcode'])->first();
-                if($sku) throw new \Exception("条码【{$params['barcode']}】已经被使用");
-                Sku::create($createData);
+            DB::beginTransaction();
+            $params = $request->only(['barcode','name','description','items']);
+            $exists = Sku::whereBarcode($params['barcode'])->exists();
+            if($exists) throw new \Exception("条码【{$params['barcode']}】已经被使用");
+            $sku = Sku::create([
+                'barcode' => $params['barcode'],
+                'name' => $params['name'],
+                'description' => $params['description']
+            ]);
+            foreach ($params['items'] as $key => $item){
+                SkuItem::create([
+                    'sku_id' => $sku->id,
+                    'material_id' => $item['material_id'],
+                    'qty' => $item['qty']
+                ]);
             }
+            DB::commit();;
             return [
                 'code' => 200,
                 'msg' => '创建成功'
             ];
         }catch (\Exception $exception){
+            DB::rollBack();
             return [
                 'code' => 400,
                 'msg' => $exception->getMessage()

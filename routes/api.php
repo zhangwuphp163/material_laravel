@@ -30,5 +30,6 @@ Route::middleware(['api-log'])->group(function(){
     Route::post('/sku',[\App\Http\Controllers\Api\SkuController::class,'index']);
     Route::post('/sku/create',[\App\Http\Controllers\Api\SkuController::class,'create']);
     Route::delete('/sku/{id}',[\App\Http\Controllers\Api\SkuController::class,'delete']);
+    Route::post('/commonest/get-select-list',[\App\Http\Controllers\Api\CommonestController::class,'getSelectList']);
 });
 

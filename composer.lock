@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "35595d9c4b7b6905c78f6185207f577c",
+    "content-hash": "328752b4e0443933fbc3c7c18535ee1f",
     "packages": [
         {
             "name": "brick/math",
@@ -1299,7 +1299,13 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/e5a3057a5591e1cfe8183034b0203921abe2c902",
                 "reference": "e5a3057a5591e1cfe8183034b0203921abe2c902",
-                "shasum": ""
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
             },
             "require": {
                 "php": "^7.3|^8.0"

@@ -18,6 +18,6 @@ class ApiResponse
         return response()->json([
             'code' => $statusCode,
             'msg' => $message,
-        ], $statusCode);
+        ], 200);
     }
 }

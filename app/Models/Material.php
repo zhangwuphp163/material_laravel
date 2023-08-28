@@ -18,9 +18,8 @@ class Material extends Model
         'description',
         'unit_price'
     ];
-
-    public function getCreatedAtAttribute($value)
+    public function serializeDate(\DateTimeInterface $date)
     {
-        return date('Y-m-d H:i:s', strtotime($value));
+        return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
     }
 }

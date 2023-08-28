@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('asn_id')->index();
             $table->unsignedInteger('material_id')->index();
+            $table->unsignedInteger('supplier_id')->index()->nullable();
             $table->unsignedInteger('plan_qty')->default(0);
             $table->unsignedInteger('actual_qty')->default(0);
             $table->decimal('plan_unit_price',10,2)->default(0);

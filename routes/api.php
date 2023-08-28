@@ -24,12 +24,29 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware(['api-log'])->group(function(){
     Route::post('/login',[\App\Http\Controllers\Api\LoginController::class,'post']);
     Route::get('/menu',[\App\Http\Controllers\Api\BaseController::class,'menu']);
+    Route::post('/commonest/get-select-list',[\App\Http\Controllers\Api\CommonestController::class,'getSelectList']);
+
     Route::post('/material',[\App\Http\Controllers\Api\MaterialController::class,'index']);
     Route::delete('/material/{id}',[\App\Http\Controllers\Api\MaterialController::class,'delete']);
     Route::post('/material/create-or-update',[\App\Http\Controllers\Api\MaterialController::class,'createOrUpdate']);
+
     Route::post('/sku',[\App\Http\Controllers\Api\SkuController::class,'index']);
-    Route::post('/sku/create',[\App\Http\Controllers\Api\SkuController::class,'create']);
+    Route::post('/sku/createOrUpdate',[\App\Http\Controllers\Api\SkuController::class,'createOrUpdate']);
+    Route::get('/sku/info/{id}',[\App\Http\Controllers\Api\SkuController::class,'getInfo']);
     Route::delete('/sku/{id}',[\App\Http\Controllers\Api\SkuController::class,'delete']);
-    Route::post('/commonest/get-select-list',[\App\Http\Controllers\Api\CommonestController::class,'getSelectList']);
+
+    Route::post('/supplier',[\App\Http\Controllers\Api\SupplierController::class,'index']);
+    Route::post('/supplier/create-or-update',[\App\Http\Controllers\Api\SupplierController::class,'createOrUpdate']);
+    Route::delete('/supplier/{id}',[\App\Http\Controllers\Api\SupplierController::class,'delete']);
+
+    Route::post('/asn',[\App\Http\Controllers\Api\AsnController::class,'index']);
+    Route::post('/asn/create-or-update',[\App\Http\Controllers\Api\AsnController::class,'createOrUpdate']);
+    Route::delete('/asn/{id}',[\App\Http\Controllers\Api\AsnController::class,'delete']);
+    Route::get('/asn/info/{id}',[\App\Http\Controllers\Api\AsnController::class,'getInfo']);
+
+    Route::post('/order',[\App\Http\Controllers\Api\OrderController::class,'index']);
+    Route::post('/order/create-or-update',[\App\Http\Controllers\Api\OrderController::class,'createOrUpdate']);
+    Route::delete('/order/{id}',[\App\Http\Controllers\Api\OrderController::class,'delete']);
+    Route::get('/order/info/{id}',[\App\Http\Controllers\Api\OrderController::class,'getInfo']);
 });
 

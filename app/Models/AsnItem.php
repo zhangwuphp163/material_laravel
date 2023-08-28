@@ -6,21 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SkuItem extends Model
+class AsnItem extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'sku_items';
-    protected $fillable = [
-        'sku_id',
-        'material_id',
-        'qty'
-    ];
-
-    public function materials(){
-        return $this->belongsToMany(Material::class);
-    }
-
+    protected $fillable = ['asn_id','material_id','supplier_id','plan_qty','actual_qty','plan_unit_price','actual_unit_price','inbound_at','confirmed_at'];
     public function serializeDate(\DateTimeInterface $date)
     {
         return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');

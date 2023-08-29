@@ -51,7 +51,7 @@ class OrderController extends Controller
                         ]);
                     }else{
                         $order->items()->whereId($item['id'])->update([
-                            'asn_id' => $order->id,
+                            'order_id' => $order->id,
                             'sku_id' => $item['sku_id'],
                             'plan_qty' => $item['plan_qty'],
                             'plan_unit_price' => $item['plan_unit_price'],

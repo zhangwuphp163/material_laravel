@@ -14,7 +14,7 @@ class Order extends Model
     protected $table = 'orders';
     protected $fillable = ['order_number','status','remarks','allocate_at','outbound_at','freight','process_cost','process_time'];
     public function items(){
-        return $this->hasMany(AsnItem::class);
+        return $this->hasMany(OrderItem::class);
     }
 
     public function serializeDate(DateTimeInterface $date)

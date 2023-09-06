@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Libraries\ApiResponse;
 use App\Models\Asn;
 use App\Models\AsnItem;
+use App\Models\Material;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -112,11 +115,68 @@ class AsnController extends Controller
     }
 
     public function getInfo($id){
-        $sku = Asn::with('items')->whereId($id)->first();
+        $asn = Asn::with('items')->whereId($id)->first();
         return [
             'code' => 200,
-            'data' => $sku->toArray(),
+            'data' => $asn->toArray(),
             'msg' => 'success'
         ];
+    }
+
+    public function getItems($asn_number){
+        try{
+            $asn = Asn::where('asn_number',$asn_number)->first();
+            if(empty($asn)) throw new \Exception("找不到入库单【{$asn_number}】");
+            $items = $asn->items()->with('material')->with('supplier')->orderBy('inbound_at','desc')->get();
+            $data = [];
+            foreach ($items as $item){
+                $data[] = [
+                    'supplier' => $item->supplier->name,
+                    'material_name' => $item->material->name,
+                    'material_barcode' => $item->material->barcode,
+                    'plan_qty' => $item->plan_qty,
+                    'actual_qty' => $item->actual_qty
+                ];
+            }
+            return [
+                'code' => 200,
+                'data' => $data,
+                'msg' => 'success'
+            ];
+        }catch (\Exception $exception){
+            return ApiResponse::error($exception->getMessage());
+        }
+    }
+
+    public function inbound(Request $request){
+        try{
+            $asn_number = $request->get("asn_number",'');
+            $material_barcode = $request->get("material_barcode",'');
+            $qty = $request->get("qty",'');
+            $asn = Asn::whereAsnNumber($asn_number)->first();
+            if(empty($asn)) throw new \Exception("找不到入库单【{$asn_number}】");
+            $material = Material::whereBarcode($material_barcode)->first();
+            if(empty($material)) throw new \Exception("找不到物料条码【{$material_barcode}】");
+            $items = AsnItem::where('asn_id',$asn->id)->where('material_id',$material->id)->get();
+            if(sizeof($items) == 0) throw new \Exception("入库单【{$asn_number}】找不到物料信息");
+            foreach ($items as $item){
+                if($item->plan_qty <= $item->actual_qty) continue;
+                $diff_qty = $item->plan_qty - $item->actual_qty;
+                $min_qty = min($qty,$diff_qty);
+                $item->actual_qty += $min_qty;
+                $qty -= $min_qty;
+                $item->inbound_at = Carbon::now();
+                $item->save();
+            }
+            if($qty > 0){
+                $item = $items->first();
+                $item->actual_qty += $qty;
+                $item->inbound_at = Carbon::now();
+                $item->save();
+            }
+            return $this->getItems($asn_number);
+        }catch (\Exception $exception){
+            return ApiResponse::error($exception->getMessage());
+        }
     }
 }

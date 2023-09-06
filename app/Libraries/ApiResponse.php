@@ -4,7 +4,7 @@ namespace App\Libraries;
 
 class ApiResponse
 {
-    public static function success($data = [], $message = "", $statusCode = 200): \Illuminate\Http\JsonResponse
+    public static function success($data = [], $message = "Success", $statusCode = 200): \Illuminate\Http\JsonResponse
     {
         return response()->json([
             'code' => 200,

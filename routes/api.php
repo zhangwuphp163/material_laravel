@@ -43,6 +43,8 @@ Route::middleware(['api-log'])->group(function(){
     Route::post('/asn/create-or-update',[\App\Http\Controllers\Api\AsnController::class,'createOrUpdate']);
     Route::delete('/asn/{id}',[\App\Http\Controllers\Api\AsnController::class,'delete']);
     Route::get('/asn/info/{id}',[\App\Http\Controllers\Api\AsnController::class,'getInfo']);
+    Route::get('/asn/items/{asn_number}',[\App\Http\Controllers\Api\AsnController::class,'getItems']);
+    Route::post('/asn/inbound',[\App\Http\Controllers\Api\AsnController::class,'inbound']);
 
     Route::post('/order',[\App\Http\Controllers\Api\OrderController::class,'index']);
     Route::post('/order/create-or-update',[\App\Http\Controllers\Api\OrderController::class,'createOrUpdate']);

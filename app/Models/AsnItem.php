@@ -15,4 +15,12 @@ class AsnItem extends Model
     {
         return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
     }
+
+    public function supplier(){
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function material(){
+        return $this->belongsTo(Material::class);
+    }
 }

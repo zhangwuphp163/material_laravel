@@ -15,7 +15,7 @@ class MaterialController extends Controller
         $limit = $pageInfo['limit']??10;
         $current = $pageInfo['current'];
         $offset = ($current - 1) * $limit;
-        $data = Material::query()->offset($offset)->limit($limit)->get()->toArray();
+        $data = Material::query()->offset($offset)->orderBy('id','desc')->limit($limit)->get()->toArray();
         return [
             'code' => 200,
             'msg' => 'success',

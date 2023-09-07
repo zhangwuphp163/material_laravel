@@ -20,11 +20,16 @@ class AsnController extends Controller
         $limit = $pageInfo['limit']??10;
         $current = $pageInfo['current'];
         $offset = ($current - 1) * $limit;
-        $data = Asn::query()->offset($offset)->limit($limit)->get()->toArray();
+        $rows = Asn::query()->with('items')->offset($offset)->limit($limit)->get()->toArray();
+        foreach ($rows as &$row){
+            $totalPlanQty = array_sum(array_column($row['items'],'plan_qty'));
+            $totalActualQty = array_sum(array_column($row['items'],'actual_qty'));
+            $row['processing'] = ceil($totalActualQty/$totalPlanQty);
+        }
         return [
             'code' => 200,
             'msg' => 'success',
-            'data' => $data,
+            'data' => $rows,
             'total' => $total
         ];
     }
@@ -150,6 +155,7 @@ class AsnController extends Controller
 
     public function inbound(Request $request){
         try{
+            DB::beginTransaction();;
             $asn_number = $request->get("asn_number",'');
             $material_barcode = $request->get("material_barcode",'');
             $qty = $request->get("qty",'');
@@ -174,8 +180,12 @@ class AsnController extends Controller
                 $item->inbound_at = Carbon::now();
                 $item->save();
             }
+            $asn->status = "receiving";
+            $asn->save();
+            DB::commit();
             return $this->getItems($asn_number);
         }catch (\Exception $exception){
+            DB::rollBack();
             return ApiResponse::error($exception->getMessage());
         }
     }

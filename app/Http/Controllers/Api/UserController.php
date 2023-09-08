@@ -47,8 +47,9 @@ class UserController extends Controller
                 $user = User::whereUsername($params['username'])->first();
                 if($user) throw new \Exception("用户账号【{$params['barcode']}】已经被使用");
                 if(empty($params['password'])){
-                    $createOrUpdateData['password'] = Hash::make("123456");
+                    $params['password'] = '123456';
                 }
+                $createOrUpdateData['password'] = Hash::make($params['password']);
                 User::create($createOrUpdateData);
             }
             return [

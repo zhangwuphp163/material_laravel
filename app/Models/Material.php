@@ -11,6 +11,7 @@ class Material extends Model implements Auditable
 {
     use HasFactory;
     use SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
 
     protected $table = 'materials';
     protected $fillable = [

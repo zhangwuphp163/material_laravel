@@ -25,6 +25,10 @@ Route::middleware(['api-log','auth.api'])->group(function(){
     Route::get('/menu',[\App\Http\Controllers\Api\BaseController::class,'menu']);
     Route::post('/commonest/get-select-list',[\App\Http\Controllers\Api\CommonestController::class,'getSelectList']);
 
+    Route::post('/user',[\App\Http\Controllers\Api\UserController::class,'index']);
+    Route::delete('/user/{id}',[\App\Http\Controllers\Api\UserController::class,'delete']);
+    Route::post('/user/create-or-update',[\App\Http\Controllers\Api\UserController::class,'createOrUpdate']);
+
     Route::post('/material',[\App\Http\Controllers\Api\MaterialController::class,'index']);
     Route::delete('/material/{id}',[\App\Http\Controllers\Api\MaterialController::class,'delete']);
     Route::post('/material/create-or-update',[\App\Http\Controllers\Api\MaterialController::class,'createOrUpdate']);
